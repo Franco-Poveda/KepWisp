@@ -1,0 +1,19 @@
+{
+  "name": "cdigital-wh-handler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "body-parser": "^1.18.3",
+    "config": "^1.30.0",
+    "csv-string": "^3.1.3",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0"
+  }
+}
