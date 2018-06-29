@@ -20,6 +20,13 @@ services:
       volumes:
         - dbdata:/var/lib/mysql
         - logvolume01:/var/log
+    rundeck:
+      container_name: rm-rundeck
+      image: jacekkow/rundeck
+      ports:
+        - "4440:4440"
+      networks:
+        - kwnet
 volumes:
   logvolume01: {}
   dbdata: {}
