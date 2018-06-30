@@ -9,8 +9,6 @@ amqp.connect('amqp://localhost').then(function (conn) {
     return conn.createChannel().then(function (ch) {
 
         var ok = ch.assertQueue('q1', { durable: true });
-
-
         ok = ok.then(function () {
 
             return ch.consume('q1', match, { noAck: false });

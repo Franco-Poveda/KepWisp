@@ -24,9 +24,6 @@ app.post('/', (req, res) => {
 
 const server = http.createServer(app)
 
-
-
-
 let ip = process.env.IP || "0.0.0.0";
 let port = process.env.PORT || 3003;
 

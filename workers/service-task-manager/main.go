@@ -7,14 +7,9 @@ import (
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"github.com/streadway/amqp"
 )
-
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-	}
-}
 
 func checkErr(err error) {
 	if err != nil {
@@ -23,14 +18,18 @@ func checkErr(err error) {
 }
 
 func main() {
-	db, err := sql.Open("mysql", "root:root@/KepWisp01?charset=utf8")
-	checkErr(err)
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	failOnError(err, "Failed to connect to RabbitMQ")
-	defer conn.Close()
+	var Env map[string]string
+	Env, err := godotenv.Read()
 
+	db, err := sql.Open("mysql", Env["MYSQL_URI"])
+	checkErr(err)
+	defer db.Close()
+
+	conn, err := amqp.Dial(Env["RABBIT_URI"])
+	checkErr(err)
+	defer conn.Close()
 	ch, err := conn.Channel()
-	failOnError(err, "Failed to open a channel")
+	checkErr(err)
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
@@ -41,10 +40,9 @@ func main() {
 		false,     // no-wait
 		nil,       // arguments
 	)
-	failOnError(err, "Failed to declare a queue")
+	checkErr(err)
 
-	// query
-	rows, err := db.Query("SELECT idUser FROM clientValance WHERE payedServiceUntil > NOW()")
+	rows, err := db.Query(overdueClients)
 	checkErr(err)
 
 	for rows.Next() {
@@ -65,6 +63,10 @@ func main() {
 				Body:        []byte(body),
 			})
 		log.Printf(" [x] Sent %s", body)
-		failOnError(err, "Failed to publish a message")
+		checkErr(err)
 	}
 }
+
+const (
+	overdueClients = "SELECT idUser FROM clientValance WHERE payedServiceUntil > NOW()"
+)
