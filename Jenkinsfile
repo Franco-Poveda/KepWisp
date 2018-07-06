@@ -4,6 +4,7 @@ pipeline {
     stage('checkout') {
       steps {
         tool(name: 'go10.3', type: 'go')
+        sh 'ls'
       }
     }
     stage('install') {
