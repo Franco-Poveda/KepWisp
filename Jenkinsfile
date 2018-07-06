@@ -4,6 +4,8 @@ pipeline {
     stage('checkout') {
       steps {
         sleep 6
+        sh '''cd ./workers
+ls'''
       }
     }
     stage('install') {
