@@ -8,7 +8,6 @@ pipeline {
     }
     stage('install') {
       steps {
-        sh 'go version'
         script {
           def root = tool name: 'go10.3', type: 'go'
           withEnv(["GOROOT=${root}", "GOPATH=${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_ID}/", "PATH+GO=${root}/bin"]) {
