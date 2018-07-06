@@ -4,8 +4,8 @@ pipeline {
     stage('checkout') {
       steps {
         sleep 6
-        sh '''cd ./workers
-ls'''
+        sh '''cd ./workers/service-task-manager
+go install'''
       }
     }
     stage('install') {
