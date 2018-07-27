@@ -20,7 +20,7 @@ app.post('/', (req, res) => {
   outch.publish('topic_logs', 'info', Buffer.from(JSON.stringify(arr)));
   console.log(" [x] Sent %s:'%s'", 'info', arr);
 });
-  app.get('/', (req, res) => res.send('Hello!'))
+  app.get('/', (req, res) => res.send('OK'))
 
 const server = http.createServer(app)
 

@@ -1,14 +1,12 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
+	//"database/sql"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	//_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/streadway/amqp"
-	"github.com/tidwall/gjson"
 	"gopkg.in/resty.v1"
 )
 
@@ -28,8 +26,8 @@ func main() {
 	var Env map[string]string
 	Env, err := godotenv.Read()
 
-	db, err := sql.Open("mysql", Env["MYSQL_URI"])
-	checkErr(err)
+	//db, err := sql.Open("mysql", Env["MYSQL_URI"])
+	//checkErr(err)
 
 	conn, err := amqp.Dial(Env["RABBIT_URI"])
 	checkErr(err)
@@ -66,23 +64,23 @@ func main() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
 			s := string(d.Body[:])
-			user := gjson.GetMany(s, "user.id", "user.wid", "user.action")
+			//user := gjson.GetMany(s, "user.id", "user.wid", "user.action")
 			log.Printf("parsed: %s", s)
 
 			resp, err := resty.R().
 				SetHeader("Content-Type", "application/json").
 				SetHeader("Authorization", Env["WISPRO_TOKEN"]).
-				SetBody(`{"state":"` + user[2].String() + `"}`).
-				Put(Env["WISPRO_BASEURL"] + user[1].String())
+				SetBody("'{\"search\":{\"ip_ends_with\": \"130.4\"}}'").
+				Get(Env["WISPRO_BASEURL"])
 			checkErr(err)
 			log.Printf("response: %s", resp)
-			stmt, err := db.Prepare("update Users set serviceState=? where idUsers=?")
-			checkErr(err)
-			res, err := stmt.Exec(user[2].String(), user[0].String())
+			//stmt, err := db.Prepare("update Users set serviceState=? where idUsers=?")
+			//checkErr(err)
+			/*res, err := stmt.Exec(user[2].String(), user[0].String())
 			checkErr(err)
 			affect, err := res.RowsAffected()
 			checkErr(err)
-			fmt.Println(affect)
+			fmt.Println(affect)*/
 
 		}
 	}()
